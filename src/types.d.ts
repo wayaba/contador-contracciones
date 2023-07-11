@@ -1,6 +1,7 @@
 export interface Interval {
-  id: number
+  id?: number
   time: string
+  timeNumber: number
   date: string
   interval: string
   duration: string

@@ -1,26 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface ChronometerReturn {
   time: number
   run: () => void
   stop: () => void
-  getFormatedTime: () => string
 }
 
-export function useChronometer (): ChronometerReturn {
-  const [time, setTime] = useState(0)
+export function useChronometer ({ startTime = 0 } = {}): ChronometerReturn {
+  const [time, setTime] = useState(startTime)
   const [isRunning, setIsRunning] = useState(false)
+  const currentTimeRef = useRef(time)
 
   useEffect(() => {
     let interval: number = 0
     if (isRunning) {
       interval = setInterval(() => {
-        setTime(prevTime => prevTime + 1)
+        const currentValue = currentTimeRef.current
+        const newValue = currentValue + 1
+        setTime(newValue)
+        currentTimeRef.current = newValue
+        if (newValue > 3600) clearInterval(interval)
       }, 1000)
+    } else {
+      clearInterval(interval)
     }
 
     return () => {
-      clearInterval(interval ?? undefined)
+      clearInterval(interval)
     }
   }, [isRunning])
 
@@ -30,19 +36,8 @@ export function useChronometer (): ChronometerReturn {
   const stop = (): void => {
     setTime(0)
     setIsRunning(false)
+    currentTimeRef.current = 0
   }
 
-  const getTwoDigits = (value: number): string => {
-    return value.toString().padStart(2, '0')
-  }
-
-  const getFormatedTime = (): string => {
-    const hours: number = Math.floor(time / 3600)
-    const minutes: number = Math.floor((time % 3600) / 60)
-    const seconds: number = time % 60
-
-    return `${getTwoDigits(hours)}:${getTwoDigits(minutes)}:${getTwoDigits(seconds)}`
-  }
-
-  return { time, run, stop, getFormatedTime }
+  return { time, run, stop }
 }

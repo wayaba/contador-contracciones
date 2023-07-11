@@ -1,83 +1,101 @@
-import { useState } from 'react'
-import { Intervals } from './Interval'
+import { useState, useEffect, useRef } from 'react'
 import { useChronometer } from '../hooks/useChronometer'
-
-const oldItems = [
-  {
-    id: 1,
-    time: '19:56',
-    date: '07/07/23',
-    interval: '00:18',
-    duration: '00:10'
-  },
-  {
-    id: 2,
-    time: '19:55',
-    date: '07/07/23',
-    interval: '00:19',
-    duration: '00:12'
-  },
-  {
-    id: 3,
-    time: '19:54',
-    date: '07/07/23',
-    interval: '00:15',
-    duration: '00:20'
-  }
-]
+import moment from 'moment'
+import {
+  addInterval,
+  getAllIntervals,
+  updateLastInterval
+} from '../services/intervals'
+import { type ListOfIntervals, type Interval } from '../types'
+import { getFormatedShortTime } from '../utils/commonHelper'
+import { ChronPage } from './ChronPage'
+import { GridPage } from './GridPage'
 
 export const Panel: React.FC = () => {
-  const [items] = useState(oldItems)
+  const [items, setItems] = useState([] as ListOfIntervals)
   const [isChronPage, setIsChronePage] = useState(false)
-  const { run, stop, getFormatedTime } = useChronometer()
+  const { time, run, stop } = useChronometer()
+  const [currentTime, setCurrentTime] = useState(0)
+  const [intervalTimer, setIntervalTimer] = useState(0)
+  const currentTimeRef = useRef(currentTime)
+
+  const setTimer = ({ intervals }: { intervals: ListOfIntervals }): void => {
+    setItems(intervals)
+    if (intervals.length > 0) {
+      currentTimeRef.current = intervals[0].timeNumber
+      setCurrentTime(intervals[0].timeNumber)
+      const intervalTimer = setInterval(() => {
+        const currentValue = currentTimeRef.current
+        const newValue = currentValue + 1
+        setCurrentTime(newValue)
+        currentTimeRef.current = newValue
+        if (newValue > 3600) clearInterval(intervalTimer)
+      }, 1000)
+      setIntervalTimer(intervalTimer)
+    }
+  }
+
+  useEffect(() => {
+    getAllIntervals()
+      .then((intervals) => {
+        setTimer({ intervals })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+
+    return () => {
+      clearInterval(intervalTimer)
+    }
+  }, [])
 
   const handleStart = (): void => {
+    updateLastInterval(getFormatedShortTime(currentTime))
+      .then((intervals) => {
+        setItems(intervals)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+
     setIsChronePage(true)
+    clearInterval(intervalTimer)
     run()
   }
   const handleStop = (): void => {
     setIsChronePage(false)
     stop()
+    const now = moment()
+    const interval: Interval = {
+      time: now.format('HH:mm'),
+      timeNumber: time,
+      date: now.format('DD/MM/YY'),
+      interval: getFormatedShortTime(time),
+      duration: getFormatedShortTime(time)
+    }
+    addInterval({ interval })
+      .then((intervals) => {
+        setTimer({ intervals })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
   return (
-    <section className="h-[80vh] bg-gradient-to-b from-red-200 via-pink-200  to-white m-4 rounded-lg justify-center text-center flex flex-col">
+    <section className="h-[80vh] mx-auto w-[50vh] bg-gradient-to-b from-red-200 via-pink-200  to-white rounded-lg justify-center text-center flex flex-col">
       {isChronPage
         ? (
-        <>
-          <div className="flex justify-center items-center m-6">
-            <div className="relative">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-gray-100 z-10 flex items-center justify-center">
-                <div className='text-center'>{getFormatedTime()}</div>
-              </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-gray-200 animate-pulse transform hover:scale-100 transition-transform duration-500"></div>
-            </div>
-          </div>
-
-          <div>
-            <button
-              className="bg-purple-400 shadow-2xl text-white font-bold m-2 w-2/3 rounded-lg p-2 mt-10"
-              onClick={handleStop}
-            >
-              Parar
-            </button>
-          </div>
-        </>
+        <ChronPage
+          handleStop={handleStop}
+          timeToShow={getFormatedShortTime(time)}
+        />
           )
         : (
-        <>
-          {' '}
-          <div className="flex-grow">
-            <Intervals intervals={items} />
-          </div>
-          <div>
-            <button
-              className="bg-pink-400 shadow-2xl text-white font-bold m-2 w-2/3 rounded-lg p-2"
-              onClick={handleStart}
-            >
-              Iniciar
-            </button>
-          </div>
-        </>
+        <GridPage
+          items={items}
+          currentTime={currentTime}
+          handleStart={handleStart}
+        />
           )}
     </section>
   )
