@@ -1,6 +1,6 @@
 import { type ListOfIntervals, type Interval } from '../types'
 
-export const getAllIntervals = async (): Promise<ListOfIntervals> => {
+export const getAllIntervals = (): ListOfIntervals => {
   let items: ListOfIntervals = []
   const itemsString = localStorage.getItem('intervalos')
   if (itemsString !== null) {

@@ -36,13 +36,8 @@ export const Panel: React.FC = () => {
   }
 
   useEffect(() => {
-    getAllIntervals()
-      .then((intervals) => {
-        setTimer({ intervals })
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+    const intervals = getAllIntervals()
+    setTimer({ intervals })
 
     return () => {
       clearInterval(intervalTimer)
@@ -67,6 +62,7 @@ export const Panel: React.FC = () => {
     stop()
     const now = moment()
     const interval: Interval = {
+      id: 0,
       time: now.format('HH:mm'),
       timeNumber: time,
       date: now.format('DD/MM/YY'),
@@ -81,6 +77,7 @@ export const Panel: React.FC = () => {
         console.error(err)
       })
   }
+
   return (
     <section className="h-[80vh] mx-auto w-[50vh] bg-gradient-to-b from-red-200 via-pink-200  to-white rounded-lg justify-center text-center flex flex-col">
       {isChronPage
