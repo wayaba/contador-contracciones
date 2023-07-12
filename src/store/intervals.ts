@@ -11,8 +11,10 @@ interface State {
   setCurrentTime: (time: number) => void
   setIntervalTimer: (intervalTimer: number) => void
   reset: () => void
+  resetItems: () => void
   updateLastItervalValue: (interval: string) => void
   addItem: (item: Interval) => void
+  deleteItem: (id: number) => void
 }
 
 export const useIntervalStore = create<State>()(
@@ -35,19 +37,29 @@ export const useIntervalStore = create<State>()(
         reset: () => {
           set({ currentItemId: null })
         },
+        resetItems: () => {
+          set({ items: [] })
+        },
         updateLastItervalValue: (interval: string) => {
           const { items } = get()
-          const updatedItems = [
-            { ...items[0], interval },
-            ...items.slice(1)
-          ]
-          set({ items: updatedItems })
+          if (items.length > 0) {
+            const updatedItems = [
+              { ...items[0], interval },
+              ...items.slice(1)
+            ]
+            set({ items: updatedItems })
+          }
         },
         addItem: (item: Interval) => {
           const { items } = get()
           const newItem = { ...item, id: items.length + 1 }
           items.unshift(newItem)
           set({ items })
+        },
+        deleteItem: (id: number) => {
+          const { items } = get()
+          const updatedItems = items.filter(item => item.id !== id)
+          set({ items: updatedItems })
         }
       }
     },

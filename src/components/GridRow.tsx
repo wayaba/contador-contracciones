@@ -9,6 +9,7 @@ interface Props {
 export const GridRow: React.FC<Props> = ({ interval, currentInterval }) => {
   const setCurrentItemId = useIntervalStore((store) => store.setCurrentItemId)
   const currentItemId = useIntervalStore((store) => store.currentItemId)
+
   const handleLongPress = (id: number): void => {
     setCurrentItemId(id)
   }

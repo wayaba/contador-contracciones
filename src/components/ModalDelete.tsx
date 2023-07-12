@@ -1,11 +1,17 @@
 import { useIntervalStore } from '../store/intervals'
 
 export const ModalDelete: React.FC = () => {
+  const items = useIntervalStore((store) => store.items)
   const currentItemId = useIntervalStore((store) => store.currentItemId)
+  const deleteItem = useIntervalStore((store) => store.deleteItem)
+  const intervalTimer = useIntervalStore((store) => store.intervalTimer)
   const reset = useIntervalStore((store) => store.reset)
 
   const handleConfirmDelete = (): void => {
-    console.log('elimino el id', currentItemId)
+    if (currentItemId != null) {
+      deleteItem(currentItemId)
+      if (items.length === 0) clearInterval(intervalTimer)
+    }
   }
   const handleCancelDelete = (): void => {
     reset()

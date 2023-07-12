@@ -12,7 +12,7 @@ export const Grid: React.FC = () => {
   const currentTimeRef = useRef(currentTime)
 
   const intervalsCopy = [...items]
-  const lastInterval = intervalsCopy.shift()
+  const lastInterval = intervalsCopy.length > 0 ? intervalsCopy.shift() : null
 
   const setTimer = (): void => {
     if (items.length > 0) {

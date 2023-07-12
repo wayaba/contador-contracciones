@@ -18,15 +18,9 @@ export const Panel: React.FC = () => {
   return (
     <section className="h-[80vh] mx-auto w-[50vh] bg-gradient-to-b from-red-200 via-pink-200  to-white rounded-lg justify-center text-center flex flex-col">
       {isChronPage
-        ? (
-        <ChronPage
-          handleStop={handleStop}
-        />
-          )
-        : (
-        <GridPage handleStart={handleStart}
-        />
-          )}
+        ? <ChronPage handleStop={handleStop} />
+        : <GridPage handleStart={handleStart}/>
+      }
     </section>
   )
 }
