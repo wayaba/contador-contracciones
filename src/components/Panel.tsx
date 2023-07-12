@@ -1,81 +1,46 @@
 import { useState, useEffect, useRef } from 'react'
-import { useChronometer } from '../hooks/useChronometer'
-import moment from 'moment'
-import {
-  addInterval,
-  getAllIntervals,
-  updateLastInterval
-} from '../services/intervals'
-import { type ListOfIntervals, type Interval } from '../types'
-import { getFormatedShortTime } from '../utils/commonHelper'
 import { ChronPage } from './ChronPage'
 import { GridPage } from './GridPage'
+import { useIntervalStore } from '../store/intervals'
 
 export const Panel: React.FC = () => {
-  const [items, setItems] = useState([] as ListOfIntervals)
+  const fetchAllItems = useIntervalStore((store) => store.fetchAllItems)
+  // const [items, setItems] = useState([] as ListOfIntervals)
   const [isChronPage, setIsChronePage] = useState(false)
-  const { time, run, stop } = useChronometer()
-  const [currentTime, setCurrentTime] = useState(0)
-  const [intervalTimer, setIntervalTimer] = useState(0)
+  const items = useIntervalStore((store) => store.items)
+  const currentTime = useIntervalStore((store) => store.currentTime)
+  const setCurrentTime = useIntervalStore((store) => store.setCurrentTime)
+  const intervalTimer = useIntervalStore((store) => store.intervalTimer)
+  const setIntervalTimer = useIntervalStore((store) => store.setIntervalTimer)
   const currentTimeRef = useRef(currentTime)
 
-  const setTimer = ({ intervals }: { intervals: ListOfIntervals }): void => {
-    setItems(intervals)
-    if (intervals.length > 0) {
-      currentTimeRef.current = intervals[0].timeNumber
-      setCurrentTime(intervals[0].timeNumber)
-      const intervalTimer = setInterval(() => {
+  const setTimer = (): void => {
+    console.log('items', items)
+    if (items.length > 0) {
+      currentTimeRef.current = items[0].timeNumber
+      setCurrentTime(items[0].timeNumber)
+      const idInterval = setInterval(() => {
         const currentValue = currentTimeRef.current
         const newValue = currentValue + 1
         setCurrentTime(newValue)
         currentTimeRef.current = newValue
         if (newValue > 3600) clearInterval(intervalTimer)
       }, 1000)
-      setIntervalTimer(intervalTimer)
+      setIntervalTimer(idInterval)
     }
   }
 
   useEffect(() => {
-    const intervals = getAllIntervals()
-    setTimer({ intervals })
-
-    return () => {
-      clearInterval(intervalTimer)
-    }
+    fetchAllItems()
   }, [])
 
   const handleStart = (): void => {
-    updateLastInterval(getFormatedShortTime(currentTime))
-      .then((intervals) => {
-        setItems(intervals)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-
     setIsChronePage(true)
     clearInterval(intervalTimer)
-    run()
   }
   const handleStop = (): void => {
     setIsChronePage(false)
-    stop()
-    const now = moment()
-    const interval: Interval = {
-      id: 0,
-      time: now.format('HH:mm'),
-      timeNumber: time,
-      date: now.format('DD/MM/YY'),
-      interval: getFormatedShortTime(time),
-      duration: getFormatedShortTime(time)
-    }
-    addInterval({ interval })
-      .then((intervals) => {
-        setTimer({ intervals })
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+    setTimer()
   }
 
   return (
@@ -84,14 +49,10 @@ export const Panel: React.FC = () => {
         ? (
         <ChronPage
           handleStop={handleStop}
-          timeToShow={getFormatedShortTime(time)}
         />
           )
         : (
-        <GridPage
-          items={items}
-          currentTime={currentTime}
-          handleStart={handleStart}
+        <GridPage handleStart={handleStart}
         />
           )}
     </section>

@@ -9,7 +9,7 @@ export const getAllIntervals = (): ListOfIntervals => {
   return items
 }
 
-export const addInterval = async ({ interval }: { interval: Interval }): Promise<ListOfIntervals> => {
+export const addInterval = ({ interval }: { interval: Interval }): ListOfIntervals => {
   let items = [{ ...interval, id: 1 }]
   const itemsString = localStorage.getItem('intervalos')
 
@@ -24,7 +24,7 @@ export const addInterval = async ({ interval }: { interval: Interval }): Promise
   return items
 }
 
-export const updateLastInterval = async (interval: string): Promise<ListOfIntervals> => {
+export const updateLastInterval = (interval: string): ListOfIntervals => {
   let items: ListOfIntervals = []
   const itemsString = localStorage.getItem('intervalos')
 
@@ -36,6 +36,7 @@ export const updateLastInterval = async (interval: string): Promise<ListOfInterv
       ...items.slice(1)
     ]
 
+    console.log('actualizo', updatedItems)
     // const updatedItems = items.map(item => {
     //   if (item.id === interval.id) {
     //     return { ...item, interval: interval.interval }

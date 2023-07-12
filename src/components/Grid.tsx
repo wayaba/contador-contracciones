@@ -1,15 +1,43 @@
-import { type ListOfIntervals } from '../types'
+import { useEffect, useRef } from 'react'
+import { useIntervalStore } from '../store/intervals'
 import { getFormatedShortTime } from '../utils/commonHelper'
 import { GridRow } from './GridRow'
 
-interface Props {
-  intervals: ListOfIntervals
-  currentTime: number
-}
+export const Grid: React.FC = () => {
+  const items = useIntervalStore((store) => store.items)
+  const currentTime = useIntervalStore((store) => store.currentTime)
+  const setCurrentTime = useIntervalStore((store) => store.setCurrentTime)
+  const intervalTimer = useIntervalStore((store) => store.intervalTimer)
+  const setIntervalTimer = useIntervalStore((store) => store.setIntervalTimer)
+  const currentTimeRef = useRef(currentTime)
 
-export const Grid: React.FC<Props> = ({ intervals, currentTime }) => {
-  const intervalsCopy = [...intervals]
+  const intervalsCopy = [...items]
   const lastInterval = intervalsCopy.shift()
+
+  const setTimer = (): void => {
+    console.log('items', items)
+    if (items.length > 0) {
+      currentTimeRef.current = items[0].timeNumber
+      setCurrentTime(items[0].timeNumber)
+      const intervalTimer = setInterval(() => {
+        const currentValue = currentTimeRef.current
+        const newValue = currentValue + 1
+        setCurrentTime(newValue)
+        currentTimeRef.current = newValue
+        if (newValue > 3600) clearInterval(intervalTimer)
+      }, 1000)
+      setIntervalTimer(intervalTimer)
+    }
+  }
+
+  useEffect(() => {
+    setTimer()
+    console.log('')
+    return () => {
+      clearInterval(intervalTimer)
+    }
+  }, [])
+
   return (
     <section>
       <ul className="gap-3">
