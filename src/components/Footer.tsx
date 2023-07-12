@@ -1,3 +1,4 @@
+import { Cafecito } from './Cafecito'
 
 interface Props {
   author: string
@@ -24,6 +25,16 @@ export const Footer: React.FC<Props> = ({ author, github }) => {
         >
           Github
         </a>
+        <div className="mt-2">
+            <a
+              href="https://cafecito.app/pablojpedraza"
+              rel="noopener noreferrer"
+              target="_blank"
+              className="text-center items-center justify-center hover:opacity-70 m-auto"
+            >
+              <Cafecito/>
+            </a>
+          </div>
       </footer>
   )
 }
