@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { type Interval, type ListOfIntervals } from '../types'
-import { addInterval, getAllIntervals, updateLastInterval } from '../services/intervals'
 
 interface State {
   items: ListOfIntervals
@@ -12,14 +11,13 @@ interface State {
   setCurrentTime: (time: number) => void
   setIntervalTimer: (intervalTimer: number) => void
   reset: () => void
-  fetchAllItems: () => void
   updateLastItervalValue: (interval: string) => void
   addItem: (item: Interval) => void
 }
 
 export const useIntervalStore = create<State>()(
   persist(
-    (set) => {
+    (set, get) => {
       return {
         items: [],
         currentItemId: null,
@@ -37,16 +35,18 @@ export const useIntervalStore = create<State>()(
         reset: () => {
           set({ currentItemId: null })
         },
-        fetchAllItems: () => {
-          const items = getAllIntervals()
-          set({ items })
-        },
         updateLastItervalValue: (interval: string) => {
-          const items = updateLastInterval(interval)
-          set({ items })
+          const { items } = get()
+          const updatedItems = [
+            { ...items[0], interval },
+            ...items.slice(1)
+          ]
+          set({ items: updatedItems })
         },
-        addItem: (interval: Interval) => {
-          const items = addInterval({ interval })
+        addItem: (item: Interval) => {
+          const { items } = get()
+          const newItem = { ...item, id: items.length + 1 }
+          items.unshift(newItem)
           set({ items })
         }
       }

@@ -1,38 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { ChronPage } from './ChronPage'
 import { GridPage } from './GridPage'
 import { useIntervalStore } from '../store/intervals'
 
 export const Panel: React.FC = () => {
-  const fetchAllItems = useIntervalStore((store) => store.fetchAllItems)
-  // const [items, setItems] = useState([] as ListOfIntervals)
   const [isChronPage, setIsChronePage] = useState(false)
-  const items = useIntervalStore((store) => store.items)
-  const currentTime = useIntervalStore((store) => store.currentTime)
-  const setCurrentTime = useIntervalStore((store) => store.setCurrentTime)
   const intervalTimer = useIntervalStore((store) => store.intervalTimer)
-  const setIntervalTimer = useIntervalStore((store) => store.setIntervalTimer)
-  const currentTimeRef = useRef(currentTime)
-
-  const setTimer = (): void => {
-    console.log('items', items)
-    if (items.length > 0) {
-      currentTimeRef.current = items[0].timeNumber
-      setCurrentTime(items[0].timeNumber)
-      const idInterval = setInterval(() => {
-        const currentValue = currentTimeRef.current
-        const newValue = currentValue + 1
-        setCurrentTime(newValue)
-        currentTimeRef.current = newValue
-        if (newValue > 3600) clearInterval(intervalTimer)
-      }, 1000)
-      setIntervalTimer(idInterval)
-    }
-  }
-
-  useEffect(() => {
-    fetchAllItems()
-  }, [])
 
   const handleStart = (): void => {
     setIsChronePage(true)
@@ -40,7 +13,6 @@ export const Panel: React.FC = () => {
   }
   const handleStop = (): void => {
     setIsChronePage(false)
-    setTimer()
   }
 
   return (

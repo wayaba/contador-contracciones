@@ -15,13 +15,13 @@ export const Grid: React.FC = () => {
   const lastInterval = intervalsCopy.shift()
 
   const setTimer = (): void => {
-    console.log('items', items)
     if (items.length > 0) {
       currentTimeRef.current = items[0].timeNumber
       setCurrentTime(items[0].timeNumber)
       const intervalTimer = setInterval(() => {
         const currentValue = currentTimeRef.current
         const newValue = currentValue + 1
+
         setCurrentTime(newValue)
         currentTimeRef.current = newValue
         if (newValue > 3600) clearInterval(intervalTimer)
@@ -32,7 +32,6 @@ export const Grid: React.FC = () => {
 
   useEffect(() => {
     setTimer()
-    console.log('')
     return () => {
       clearInterval(intervalTimer)
     }

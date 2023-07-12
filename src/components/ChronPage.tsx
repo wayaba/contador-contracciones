@@ -11,6 +11,7 @@ interface Props {
 
 export const ChronPage: React.FC<Props> = ({ handleStop }) => {
   const { time, run, stop } = useChronometer()
+  const setCurrentTime = useIntervalStore((store) => store.setCurrentTime)
   const addItem = useIntervalStore((store) => store.addItem)
   useEffect(() => {
     run()
@@ -28,6 +29,7 @@ export const ChronPage: React.FC<Props> = ({ handleStop }) => {
       duration: getFormatedShortTime(time)
     }
     console.log('agrego este inetevalo', interval)
+    setCurrentTime(time)
     addItem(interval)
     handleStop()
   }
