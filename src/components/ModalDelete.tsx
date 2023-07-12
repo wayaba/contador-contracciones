@@ -12,6 +12,7 @@ export const ModalDelete: React.FC = () => {
       deleteItem(currentItemId)
       if (items.length === 0) clearInterval(intervalTimer)
     }
+    reset()
   }
   const handleCancelDelete = (): void => {
     reset()
@@ -20,12 +21,6 @@ export const ModalDelete: React.FC = () => {
   return (
     <div className="fixed inset-5 bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-10">
       <div className=" flex flex-col">
-        <button
-          className="text-white text-xl place-self-end"
-          onClick={() => { console.log('cierro') }}
-        >
-          X
-        </button>
         <div className="gird grid-col-1 items-center text-gray-200 text-center bg-slate-800 p-2 rounded-lg m-6">
           <h1 className="lg:text-4xl md:text-2xl sm:text-2xl text-lg m-2">
            🚨 !Elminar! 🚨

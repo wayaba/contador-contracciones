@@ -64,7 +64,7 @@ export const useIntervalStore = create<State>()(
       }
     },
     {
-      name: 'intervals'
+      name: 'intervals-app'
     }
   )
 )
