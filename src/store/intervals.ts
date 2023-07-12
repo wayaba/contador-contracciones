@@ -52,7 +52,7 @@ export const useIntervalStore = create<State>()(
         },
         addItem: (item: Interval) => {
           const { items } = get()
-          const newItem = { ...item, id: items.length + 1 }
+          const newItem = { ...item, id: new Date().getTime() }
           items.unshift(newItem)
           set({ items })
         },
