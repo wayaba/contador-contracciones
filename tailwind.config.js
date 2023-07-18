@@ -10,8 +10,7 @@ export default {
         xl: '1.25rem' // Tamaño de fuente extra grande
       },
       backgroundImage: {
-        'bg-grid': "url('./bg-grid.svg')"
-        //'bg-chron': "url('/img/footer-texture.png')",
+        'bg-grid': "url('/images/bg-grid.svg')"
       }
     }
   },
