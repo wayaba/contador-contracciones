@@ -19,7 +19,7 @@ export const GridPage: React.FC<Props> = ({ handleStart }) => {
   return (
     <>
     {' '}
-    <div className="flex-grow overflow-y-auto">
+    <div className="flex-grow overflow-y-auto z-20">
       <Grid />
     </div>
     {currentItemId !== null && (<ModalDelete/>)}

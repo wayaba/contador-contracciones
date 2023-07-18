@@ -36,11 +36,11 @@ export const ChronPage: React.FC<Props> = ({ handleStop }) => {
 
   return (
         <>
-        <div className="flex-grow relative">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gray-100 z-10 flex items-center justify-center">
+        <div className="flex-grow relative z-20">
+          <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-gray-100 z-10 flex items-center justify-center">
             <div className="text-center text-purple-400 text-xl">{getFormatedShortTime(time)}</div>
           </div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full bg-gray-200 animate-pulse transform hover:scale-100 transition-transform duration-500"></div>
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gray-200 animate-pulse transform hover:scale-100 transition-transform duration-500"></div>
         </div>
         <div>
           <button

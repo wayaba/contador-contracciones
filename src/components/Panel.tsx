@@ -16,11 +16,14 @@ export const Panel: React.FC = () => {
   }
 
   return (
-    <section className="h-[80vh] mx-auto w-[50vh] bg-gradient-to-b from-red-200 via-pink-200  to-white rounded-lg justify-center text-center flex flex-col">
+    <section className="h-[80vh] mx-auto w-[50vh] bg-gradient-to-b from-red-200 via-pink-200 to-white rounded-lg justify-center text-center flex flex-col">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-bg-grid bg-no-repeat z-10 opacity-50 rounded-full  h-64 w-64 m-auto"></div>
+
       {isChronPage
         ? <ChronPage handleStop={handleStop} />
         : <GridPage handleStart={handleStart}/>
       }
+
     </section>
   )
 }
