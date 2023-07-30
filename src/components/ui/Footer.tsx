@@ -1,4 +1,4 @@
-import { Cafecito } from './Cafecito'
+import { Cafecito } from '../Cafecito'
 
 interface Props {
   author: string

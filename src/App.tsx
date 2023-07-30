@@ -1,14 +1,12 @@
 
-import { Footer } from './components/Footer'
 import { Panel } from './components/Panel'
+import { Layout } from './components/Layout'
 
 function App (): JSX.Element {
   return (
-    <main className="bg-gray-800 grid h-screen items-center justify-center">
-
+    <Layout>
       <Panel />
-      <Footer author="Pablo Pedraza" github="wayaba" />
-    </main>
+    </Layout>
   )
 }
 
