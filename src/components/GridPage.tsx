@@ -19,7 +19,6 @@ export const GridPage: React.FC<Props> = ({ handleStart }) => {
   return (
     <>
     {' '}
-    {/* <header className="fixed top-0 mx-auto w-[50vh] h-4 z-50 flex flex-row justify-between text-gray-500"> */}
     <header className="m-2 flex flex-row justify-between text-gray-500 font-bold">
       <div className='ml-2'>Duración</div>
       <div className=''>Intervalo</div>

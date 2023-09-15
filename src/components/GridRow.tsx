@@ -19,14 +19,14 @@ export const GridRow: React.FC<Props> = ({ interval, currentInterval }) => {
       key={interval.id}
       className={`bg-white m-2 rounded-md p-2 grid grid-cols-3 items-center
       ${currentItemId === interval.id ? 'opacity-70' : ''}`}
-      onTouchStart={() => {
+    >
+
+      <div className="flex font-bold text-left gap-2"><img onTouchEnd={() => {
         handleLongPress(interval.id)
       }}
       onMouseDown={() => {
         handleLongPress(interval.id)
-      }}
-    >
-      <div className="font-bold text-left">{interval.duration}</div>
+      }} className='cursor-pointer' src='./images/remove.svg'/>{interval.duration}</div>
       <div className="font-bold text-center">{currentInterval}</div>
       <div className="font-bold text-right">{interval.time}</div>
       <div className="h-1 w-3/4 bg-pink-400 rounded-2xl"></div>
