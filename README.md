@@ -1,6 +1,6 @@
 # Contador Contracciones
 
-Memotest desarrollado con Vite + ReactJs (Typescript) + Tailwind
+ - desarrollado con Vite + ReactJs (Typescript) + Tailwind
 
 ## Getting Started
 
